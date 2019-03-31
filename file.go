@@ -25,6 +25,14 @@ func IsFile(path string) bool {
 	return err == nil && !s.IsDir()
 }
 
+// MkDir 创建目录，如果目录存在则直接返回
+func MkDir(path string) error {
+	if !Exist(path) {
+		return os.MkdirAll(path, os.ModePerm)
+	}
+	return nil
+}
+
 // CurrentPath 获取当前主程序的路径
 func CurrentPath() (string, error) {
 	file, err := exec.LookPath(os.Args[0])
