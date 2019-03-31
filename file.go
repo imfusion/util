@@ -1,6 +1,11 @@
 package util
 
-import "os"
+import (
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+)
 
 // Exist 判断路径/文件是否存在
 func Exist(path string) bool {
@@ -18,4 +23,20 @@ func IsDir(path string) bool {
 func IsFile(path string) bool {
 	s, err := os.Stat(path)
 	return err == nil && !s.IsDir()
+}
+
+// CurrentPath 获取当前主程序的路径
+func CurrentPath() (string, error) {
+	file, err := exec.LookPath(os.Args[0])
+	if err != nil {
+		return "", err
+	}
+	path, err := filepath.Abs(file)
+	if err != nil {
+		return "", err
+	}
+
+	i := strings.LastIndex(path, string(os.PathSeparator))
+
+	return string(path[0:i]), err
 }
