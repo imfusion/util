@@ -1,6 +1,8 @@
 package util
 
 import (
+	"bufio"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -47,4 +49,25 @@ func CurrentPath() (string, error) {
 	i := strings.LastIndex(path, string(os.PathSeparator))
 
 	return string(path[0:i]), err
+}
+
+// ReadLine 按行读取文件返回所有行的 slice 切片
+func ReadLine(fileName string) ([]string, error) {
+	f, err := os.Open(fileName)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	br := bufio.NewReader(f)
+	var lines []string
+	for {
+		line, _, err := br.ReadLine()
+		if err == io.EOF {
+			break
+		}
+		lines = append(lines, string(line))
+	}
+
+	return lines, nil
 }
